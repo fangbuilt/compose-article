@@ -3,17 +3,16 @@ package com.example.composearticle
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -25,17 +24,13 @@ import com.example.composearticle.ui.theme.ComposeArticleTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             ComposeArticleTheme {
-                val title = stringResource(R.string.title)
-                val contentA = stringResource(R.string.content_a)
-                val contentB = stringResource(R.string.content_b)
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    WithHeader(
-                        title, contentA, contentB,
-                        modifier = Modifier.padding(innerPadding),
-                    )
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    ComposeArticleApp()
                 }
             }
         }
@@ -43,51 +38,47 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Article(title: String, contentA: String, contentB: String, modifier: Modifier = Modifier) {
-    Column(modifier = Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text(
-            text = title,
-            modifier = modifier,
-            fontSize = 24.sp,
-            lineHeight = 24.sp
-        )
-        Text(
-            text = contentA,
-            modifier = modifier,
-            textAlign = TextAlign.Justify,
-            lineHeight = 24.sp
-        )
-        Text(
-            text = contentB,
-            modifier = modifier,
-            textAlign = TextAlign.Justify,
-            lineHeight = 24.sp
-        )
-    }
+fun ComposeArticleApp() {
+    ArticleCard(
+        title = stringResource(R.string.title_jetpack_compose_tutorial),
+        shortDescription = stringResource(R.string.compose_short_desc),
+        longDescription = stringResource(R.string.compose_long_desc),
+        imagePainter = painterResource(R.drawable.bg_compose_background)
+    )
 }
 
 @Composable
-fun WithHeader(title: String, contentA: String, contentB: String, modifier: Modifier = Modifier) {
-    val composeBg = painterResource(R.drawable.bg_compose_background)
-    Column {
-        Image(
-            painter = composeBg,
-            contentDescription = "Header Background",
-            modifier = Modifier.fillMaxWidth()
+private fun ArticleCard(
+    title: String,
+    shortDescription: String,
+    longDescription: String,
+    imagePainter: Painter,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Image(painter = imagePainter, contentDescription = null)
+        Text(
+            text = title,
+            modifier = Modifier.padding(16.dp),
+            fontSize = 24.sp
         )
-        Article(title = title, contentA = contentA, contentB = contentB)
+        Text(
+            text = shortDescription,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            textAlign = TextAlign.Justify
+        )
+        Text(
+            text = longDescription,
+            modifier = Modifier.padding(16.dp),
+            textAlign = TextAlign.Justify
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    val title = stringResource(R.string.title)
-    val contentA = stringResource(R.string.content_a)
-    val contentB = stringResource(R.string.content_b)
+fun ComposeArticleAppPreview() {
     ComposeArticleTheme {
-        WithHeader(
-            title, contentA, contentB
-        )
+        ComposeArticleApp()
     }
 }
